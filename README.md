@@ -3,13 +3,13 @@
 
 ### Project Goals :
 * A Camera Selling Website.
-* Google sign in and Email Sign in enable.
-* Registration system enable.
-* Admin Role enable to manage All Products and All Orders.
-* Create new Admin by existing Admin.
+* Google sign-in and Email Sign-in enabled.
+* Registration system enabled.
+* Admin Role enabled to manage All Products and All Orders.
+* Create a new Admin by existing Admin.
 * Get customer review and display in home page with stars.
-* Order status change enable.
-* JWT verification enable.
+* Order status change enabled.
+* JWT verification enabled.
 
 ### Client Side Code Link :
 https://github.com/githubkaium/pipilica-shop-client-pp
