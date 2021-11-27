@@ -12,10 +12,10 @@
 * JWT verification enable.
 
 ### Client Side Code Link :
-https://github.com/programming-hero-web-course-4/niche-website-client-side-githubkaium
+https://github.com/githubkaium/pipilica-shop-client-pp
 
 ### Server Side Code Link :
-https://github.com/programming-hero-web-course-4/niche-website-server-side-githubkaium
+https://github.com/githubkaium/pipilica-shop-server-pp
 
 ### Live Website Link :
 https://pipilica-shop.web.app
