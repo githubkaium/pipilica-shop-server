@@ -1,12 +1,27 @@
 const express = require('express');
-const app = express();
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUI = require('swagger-ui-express');
 const cors = require('cors');
 const admin = require("firebase-admin");
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
 const ObjectId = require('mongodb').ObjectId;
+const app = express();
 
 const port = process.env.PORT || 5000;
+
+//Swagger Configuration  
+const swaggerOptions = {
+    swaggerDefinition: {
+        info: {
+            title:'products API',
+            version:'3.0.3'
+        }
+    },
+    apis:['index.js'],
+}
+const swaggerDocs = swaggerJSDoc(swaggerOptions);
+app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerDocs));
 
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
@@ -46,20 +61,47 @@ async function run() {
 
         ////////// START PRODUCTS API SECTION //////////
         // GET PRODUCTS API
+/**
+ * @swagger
+ * /products:
+ *   get:
+ *     description: Get all products
+ *     responses:
+ *       200:
+ *         description: Success
+ *
+ */
         app.get('/products', async (req, res) => {
             const cursor = productsCollection.find({});
             const products = await cursor.toArray();
-            res.send(products);
+            res.status(200).send(products);
         });
 
         // POST PRODUCT API
+/**
+ * @swagger
+ * /products:
+ *   post:
+ *     description: Create a new product
+ *     parameters:
+ *     - name: ProductName
+ *       description: Create a new product
+ *       in: formData
+ *       required: true
+ *       type: String
+ *     responses:
+ *       201:
+ *         description: Created
+ *
+ */
         app.post('/products', async (req, res) => {
             const product = req.body;
             const result = await productsCollection.insertOne(product);
-            res.json(result);
+            res.status(201).json(result);
         });
 
         // GET SINGLE PRODUCT API BY ID
+
         app.get('/products/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
@@ -68,20 +110,46 @@ async function run() {
         })
 
         // DELETE SINGLE PRODUCT API BY ID
+/**
+ * @swagger
+ * /products:
+ *   delete:
+ *     description: Delete a product
+ *     parameters:
+ *     - name: ProductName
+ *       description: Delete a product
+ *       in: formData
+ *       required: true
+ *       type: String
+ *     responses:
+ *       201:
+ *         description: Created
+ *
+ */
         app.delete('/products/deleteProduct/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await productsCollection.deleteOne(query);
-            res.json(result);
+            res.status(201).json(result);
         })
         ////////// END PRODUCTS API SECTION //////////
 
         ////////// START BOOKING API SECTION //////////
         // GET ALL BOOKINGS API
+/**
+ * @swagger
+ * /allBookings:
+ *   get:
+ *     description: Get all bookings
+ *     responses:
+ *       200:
+ *         description: Success
+ *
+ */
         app.get('/allBookings', async (req, res) => {
             const cursor = bookingsCollection.find({});
             const bookings = await cursor.toArray();
-            res.send(bookings);
+            res.status(200).send(bookings);
         });
 
         // GET SINGLE BOOKING BY EMAIL
@@ -96,10 +164,26 @@ async function run() {
         })
 
         // ADD SINGLE BOOKING
+/**
+ * @swagger
+ * /bookings:
+ *   post:
+ *     description: Create a new booking
+ *     parameters:
+ *     - name: ProductName
+ *       description: Create a new booking
+ *       in: formData
+ *       required: true
+ *       type: String
+ *     responses:
+ *       201:
+ *         description: Created
+ *
+ */
         app.post('/bookings', async (req, res) => {
             const booking = req.body;
             const result = await bookingsCollection.insertOne(booking);
-            res.json(result)
+            res.status(201).json(result)
         });
 
         // DELETE SINGLE BOOKING BY ID
@@ -111,6 +195,22 @@ async function run() {
         })
 
         // UPDATE SINGLE BOOKING BY ID
+/**
+ * @swagger
+ * /bookings:
+ *   put:
+ *     description: Update booking
+ *     parameters:
+ *     - name: ProductName
+ *       description: Update booking
+ *       in: formData
+ *       required: true
+ *       type: String
+ *     responses:
+ *       201:
+ *         description: Created
+ *
+ */
         app.put('/bookings/updateBooking/:id', (req, res) => {
             const id = req.params.id;
             const updatedStatus = req.body.status;
@@ -119,7 +219,7 @@ async function run() {
                 $set: { status: updatedStatus },
             })
                 .then((result) => {
-                    res.json(result);
+                    res.status(201).json(result);
                 });
         });
         ////////// END BOOKING API SECTION //////////
